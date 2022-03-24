@@ -99,45 +99,62 @@ class addStudentScreen(QDialog): #UI for the screen for adding students
         self.genderComboBox = self.findChild(QComboBox, "comboBox")
 
         self.label = self.findChild(QLabel, "label_7")
-        self.edit = True
         
         self.addButton = self.findChild(QPushButton, "pushButton")
         self.xButton = self.findChild(QPushButton, "pushButton_2")
+
+        self.correct = True
 
         self.addButton.clicked.connect(self.addStudent)
         self.xButton.clicked.connect(self.mainMenu)
         
     def addStudent(self): #Function for adding students
         student_info = []
-
-        id_num = self.idTextEdit.toPlainText()
-        student_info.append(id_num)
-
-        name = self.nameTextEdit.toPlainText()
-        student_info.append(name)
-
-        course = self.courseTextEdit.toPlainText()
-        student_info.append(course)
-
-        year_level = self.yearComboBox.currentText()
-        student_info.append(year_level)
-
-        gender = self.genderComboBox.currentText()
-
-        student_info.append(gender)
         
-        self.idTextEdit.setPlainText("")
-        self.nameTextEdit.setPlainText("")
-        self.courseTextEdit.setPlainText("")
+        while self.correct:
+            id_num = self.idTextEdit.toPlainText()
+            try:
+                int_id1 = int(id_num[0:4])
+                int_id2 = int(id_num[5:])
+            except:
+                self.ErrorPopup()
+                break
+            student_info.append(id_num)
 
-        self.label.setText(f'Student Added')
+            name = self.nameTextEdit.toPlainText()
+            student_info.append(name)
 
-        data.append(student_info)
-        updateFile()
+            course = self.courseTextEdit.toPlainText()
+            student_info.append(course)
+
+            year_level = self.yearComboBox.currentText()
+            student_info.append(year_level)
+
+            gender = self.genderComboBox.currentText()
+            student_info.append(gender)
+        
+            self.idTextEdit.setPlainText("")
+            self.nameTextEdit.setPlainText("")
+            self.courseTextEdit.setPlainText("")
+
+            self.label.setText(f'Student Added')
+
+            data.append(student_info)
+            updateFile()
+            self.correct = False
+            
+    def ErrorPopup(self):#Function to open Error Pop-up
+        self.showError = ErrorWindow()
+        self.showError.show()
         
     def mainMenu(self): #Function to go back to main menu
         widget.setCurrentIndex(widget.currentIndex()-2)
-
+        
+class ErrorWindow(QDialog): #UI for Error Pop-up
+    def __init__(self):
+        super(ErrorWindow,self).__init__()
+        loadUi("errorPopup.ui", self)
+        
 class edit(QDialog):#UI for the screen for editing students
     def __init__(self):
         super(edit, self).__init__()
@@ -151,6 +168,7 @@ class edit(QDialog):#UI for the screen for editing students
 
         self.stud_list=[]
         self.addPlainText()
+        self.correct = True
 
         self.label = self.findChild(QLabel, "label_7")
         
@@ -170,28 +188,39 @@ class edit(QDialog):#UI for the screen for editing students
         
         student_info = []
 
-        id_num = self.idTextEdit.toPlainText()
-        student_info.append(id_num)
+        while self.correct:
+            id_num = self.idTextEdit.toPlainText()
+            try:
+                int_id1 = int(id_num[0:4])
+                int_id2 = int(id_num[5:])
+            except:
+                self.ErrorPopup()
+                break
+            student_info.append(id_num)
 
-        name = self.nameTextEdit.toPlainText()
-        student_info.append(name)
+            name = self.nameTextEdit.toPlainText()
+            student_info.append(name)
 
-        course = self.courseTextEdit.toPlainText()
-        student_info.append(course)
+            course = self.courseTextEdit.toPlainText()
+            student_info.append(course)
 
-        year_level = self.yearComboBox.currentText()
-        student_info.append(year_level)
+            year_level = self.yearComboBox.currentText()
+            student_info.append(year_level)
 
-        gender = self.genderComboBox.currentText()
+            gender = self.genderComboBox.currentText()
+            student_info.append(gender)
 
-        student_info.append(gender)
+            self.label.setText(f'Student Added')
 
-        self.label.setText(f'Student Added')
-
-        data.append(student_info)
-        data.remove(self.stud_list)
-        updateFile()
-
+            data.append(student_info)
+            data.remove(self.stud_list)
+            updateFile()
+            self.correct = False
+            
+    def ErrorPopup(self): #Function to open Error Pop-up
+        self.showError = ErrorWindow()
+        self.showError.show()
+        
     def goBack(self): #Function to go back to another screen
         self.idTextEdit.clear()
         self.nameTextEdit.clear()
