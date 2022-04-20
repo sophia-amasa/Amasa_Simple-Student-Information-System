@@ -98,6 +98,8 @@ class MainWindow(QMainWindow): #UI for Main Window
 
     def editStudent(self): #Function for editing students
         addStudent.addPlainText()
+        addStudent.correct = True
+        addStudent.edit = True
         
         widget.setCurrentIndex(widget.currentIndex()+1)
             
@@ -132,6 +134,7 @@ class addStudentScreen(QDialog): #UI for the screen for adding students
         self.xButton = self.findChild(QPushButton, "pushButton_2")
 
         self.correct = True
+        self.edit = False
 
         self.addButton.clicked.connect(self.addStudent)
         self.xButton.clicked.connect(self.mainMenu)
@@ -179,6 +182,9 @@ class addStudentScreen(QDialog): #UI for the screen for adding students
             self.courseTextEdit.setPlainText("")
 
             data.append(student_info)
+            if self.edit:
+                data.remove(self.stud_list)
+                self.edit = False
             updateFile()
             
             self.correct = False
@@ -187,6 +193,7 @@ class addStudentScreen(QDialog): #UI for the screen for adding students
     def mainMenu(self): #Function to go back to main menu
         if info:
             info.remove(info[0])
+        mainwindow.allStudents()
         widget.setCurrentIndex(widget.currentIndex()-1)
 
 class PopupWindow(QDialog): #UI for Pop-up
